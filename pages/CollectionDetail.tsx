@@ -15,8 +15,8 @@ type CollectionDetailProps = {
 export default function CollectionDetail({ route }: CollectionDetailProps) {
   const { CollectionName } = route.params;
 
+  console.log('Collection Name:', CollectionName);
   useEffect(() => {
-    // Load collection details based on the CollectionName
     console.log('Loading collection details for:', CollectionName);
   }, [CollectionName]);
 
@@ -25,7 +25,8 @@ export default function CollectionDetail({ route }: CollectionDetailProps) {
       <ScreenContent>
         {CollectionName === "Stock Collection" && (
           <>
-            <ScriptureEntry verse="John 3:16" text="For God so loved the world..." />
+          <ScriptureEntry translations={["WLCC", "NKJV"]} book={1} chapter={1} verseNumbers={[1, 2]} />
+            {/* <ScriptureEntry verse="John 3:16" text="For God so loved the world..." />
             <Separator />
             <ScriptureEntry verse="Romans 8:28" text="And we know that in all things God works for the good of those who love him..." />
             <Separator />
@@ -33,7 +34,7 @@ export default function CollectionDetail({ route }: CollectionDetailProps) {
             <Separator />
             <ScriptureEntry verse="Psalm 127:1" text="Unless the Lord builds the house, the builders labor in vain." />
             <Separator />
-            <ScriptureEntry verse="Proverbs 3:5-6" text="Trust in the Lord with all your heart and lean not on your own understanding..." />
+            <ScriptureEntry verse="Proverbs 3:5-6" text="Trust in the Lord with all your heart and lean not on your own understanding..." /> */}
           </>
         )}
       </ScreenContent>
