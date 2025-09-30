@@ -1,5 +1,16 @@
 import axios from 'axios';
 
+const getBooks = async (translation) => {
+  try {
+    const response = await axios.get(`https://bolls.life/get-books/${translation}/`);
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching book name:', error);
+    throw error;
+  }
+};
+
 const getParallelVerses = async (translations, book, chapter, verses) => {
   try {
     console.log("getParallelVerses called with:", { translations, book, chapter, verses });
@@ -19,4 +30,4 @@ const getParallelVerses = async (translations, book, chapter, verses) => {
   }
 };
 
-export { getParallelVerses };
+export { getParallelVerses, getBooks };
