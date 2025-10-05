@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import RenderHtml from 'react-native-render-html';
+import { useWindowDimensions } from 'react-native';
+import { BookEntry, Verse } from 'models/models';
 import { Text, View } from 'react-native';
-import Books from './Books';
-import { getParallelVerses } from '../api/api';
+import { bookDict } from 'services/translationDictionaryService';
+import { parallelVerseService } from 'services/parallelVerseService';
 
 type ScriptureEntryProps = {
   translations: string[];
@@ -11,22 +14,43 @@ type ScriptureEntryProps = {
 };
 
 export const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: ScriptureEntryProps) => {
+  const [verses, setVerses] = useState<Verse[]>([]);
+  const [bookNames, setBookNames] = useState<string[]>([]);
+  const { width } = useWindowDimensions();
 
-  const [verseText, setVerseText] = useState("");
-  console.log("constructing ScriptureEntry object");
+  useEffect(() => {
+    Promise.all(
+      translations.map(async (translation) => {
+        await parallelVerseService.getParallelVerses({ translations: [translation], book, chapter, verseNumbers });
+        const verseText = await parallelVerseService.getVerseTextByTranslation(translation);
+        return {
+          translation,
+          book,
+          chapter,
+          text: verseText || "",
+        } as Verse; 
+      })
+    ).then(setVerses);
 
-  getParallelVerses(translations, book, chapter, verseNumbers).then((resText) => {
-    const books = Books({ translations });
-    console.log("First book name:", books.get(translations[0]));
-    //construct elements that have the name of the book and verse with all translations for each verse
-
-    setVerseText(resText[0][0].text); // Example: setting to the text of the first verse of the first translation
-  });
+    bookDict.setBooks(translations).then(() => {
+      const names = translations.map((translation) => {
+        const bookDetail: BookEntry | undefined = bookDict.getBookFromCache(translation, book);
+        return bookDetail?.name || "";
+      });
+      setBookNames(names);
+    });
+  }, [translations, book, chapter, verseNumbers]);
 
   return (
     <View>
-      <Text>{`Genesis ${chapter}:${verseNumbers.join(",")}`}</Text>
-      <Text>{verseText}</Text>
+      {verses.map((verse, idx) => (
+        <View key={idx} style={{ marginBottom: 16 }}>
+          <Text>
+            {bookNames[idx]} {chapter}:{verseNumbers.join(",")}
+          </Text>
+          <RenderHtml contentWidth={width} source={{ html: verse.text }} />
+        </View>
+      ))}
     </View>
-  )
+  );
 };

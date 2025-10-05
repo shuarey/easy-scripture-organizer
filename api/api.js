@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const getBooks = async (translation) => {
   try {
-    const response = await axios.get(`https://bolls.life/get-books/${translation}/`);
+    const response = await axios.get(`https://bolls.life/get-books/${translation}`);
 
     return response.data;
   } catch (error) {
@@ -13,7 +13,6 @@ const getBooks = async (translation) => {
 
 const getParallelVerses = async (translations, book, chapter, verses) => {
   try {
-    console.log("getParallelVerses called with:", { translations, book, chapter, verses });
     const body = {
         translations: translations,
         book: book,

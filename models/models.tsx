@@ -1,15 +1,23 @@
-type verse = {
-    "book": number;
-    "chapter": number;
-    "text": string;
-    "translation": string;
-    "verse": number;
+interface Verse {
+  pk: number;
+  translation: string;
+  book: number | string;
+  chapter: number;
+  verse: number;
+  text: string;
 }
+
+interface VerseDictionary {
+  [translation: string]: Verse[];
+}
+
+type VerseData = Verse[][];
 
 type BookEntry = {
-    bookID: number;
+    bookid: number;
     name: string;
     chapters: number;
+    chronorder: number;
 }
 
-export { verse, BookEntry };
+export { Verse, VerseData, VerseDictionary, BookEntry };

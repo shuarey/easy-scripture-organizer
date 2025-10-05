@@ -28,7 +28,7 @@ export const PickerComponent = ({ label, onSelect }: PickerComponentProps) => {
           onValueChange={handleValueChange}
           itemStyle={{ fontSize: 20, height: 200 }}
         >
-          <Picker.Item label="Stock verses" value="Stock Collection" />
+          <Picker.Item  label="Stock verses" value="Stock Collection" />
           <Picker.Item label="Building a house" value="Building Collection" />
           <Picker.Item label="Spiritual warfare" value="Spiritual Warfare Collection" />
           <Picker.Item label="Healing" value="Healing Collection" />
