@@ -17,7 +17,6 @@ export const PickerComponent = ({ label, onSelect }: PickerComponentProps) => {
 
   useEffect(() => {
     //should load collections from a data source
-    console.log('PickerComponent mounted');
   }, []);
   
   return (
@@ -28,11 +27,12 @@ export const PickerComponent = ({ label, onSelect }: PickerComponentProps) => {
           onValueChange={handleValueChange}
           itemStyle={{ fontSize: 20, height: 200 }}
         >
-          <Picker.Item  label="Stock verses" value="Stock Collection" />
-          <Picker.Item label="Building a house" value="Building Collection" />
-          <Picker.Item label="Spiritual warfare" value="Spiritual Warfare Collection" />
-          <Picker.Item label="Healing" value="Healing Collection" />
-          <Picker.Item label="Weird stuff" value="Weird Collection" />
+          <Picker.Item label="Select a collection" value="" />
+          <Picker.Item label="Stock verses" value="Stock verses" />
+          <Picker.Item label="Building a house" value="Building a house" />
+          <Picker.Item label="Spiritual warfare" value="Spiritual warfare" />
+          <Picker.Item label="Healing" value="Healing" />
+          <Picker.Item label="Weird stuff" value="Weird stuff" />
         </Picker>
     </View>
   );

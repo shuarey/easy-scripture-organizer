@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
-import RenderHtml from 'react-native-render-html';
-import { useWindowDimensions } from 'react-native';
-import { BookEntry, Verse } from 'models/models';
+import { memo, useEffect, useState } from 'react';
+import { Verse } from 'models/models';
 import { Text, View } from 'react-native';
-import { bookDict } from 'services/translationDictionaryService';
 import { parallelVerseService } from 'services/parallelVerseService';
+import { useDictionary } from 'context/dictionaryContext';
+import RenderHtml from './RenderHtml';
 
 type ScriptureEntryProps = {
   translations: string[];
@@ -13,44 +12,42 @@ type ScriptureEntryProps = {
   verseNumbers: number[];
 };
 
-export const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: ScriptureEntryProps) => {
+const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: ScriptureEntryProps) => {
   const [verses, setVerses] = useState<Verse[]>([]);
-  const [bookNames, setBookNames] = useState<string[]>([]);
-  const { width } = useWindowDimensions();
+  const [verseSpan, setVerseSpan] = useState<string>("");
+  const { dictionary } = useDictionary();
 
   useEffect(() => {
+    setVerseSpan(verseNumbers.length > 1 ?
+       `${verseNumbers[0]}-${verseNumbers[verseNumbers.length - 1]}` : `${verseNumbers[0]}`);
+
     Promise.all(
       translations.map(async (translation) => {
         await parallelVerseService.getParallelVerses({ translations: [translation], book, chapter, verseNumbers });
         const verseText = await parallelVerseService.getVerseTextByTranslation(translation);
+        const bookEntry = dictionary.get(translation)?.find(b => b.bookid === book);
         return {
           translation,
-          book,
+          book: bookEntry!.name,
           chapter,
           text: verseText || "",
         } as Verse; 
       })
     ).then(setVerses);
-
-    bookDict.setBooks(translations).then(() => {
-      const names = translations.map((translation) => {
-        const bookDetail: BookEntry | undefined = bookDict.getBookFromCache(translation, book);
-        return bookDetail?.name || "";
-      });
-      setBookNames(names);
-    });
-  }, [translations, book, chapter, verseNumbers]);
+  }, []);
 
   return (
     <View>
       {verses.map((verse, idx) => (
         <View key={idx} style={{ marginBottom: 16 }}>
-          <Text>
-            {bookNames[idx]} {chapter}:{verseNumbers.join(",")}
+          <Text className='text-lg font-medium'>
+            {verse.book} {chapter}:{verseSpan} ({verse.translation})
           </Text>
-          <RenderHtml contentWidth={width} source={{ html: verse.text }} />
+          <RenderHtml html={verse.text} />
         </View>
       ))}
     </View>
   );
 };
+
+export default memo(ScriptureEntry);

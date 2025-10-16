@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Easy Scripture Organizer",
-    "slug": "easy-scripture-organizer",
+    "slug": "my-expo-app",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"

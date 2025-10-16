@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Verse, VerseData, VerseDictionary } from "../models/models";
 import { getParallelVerses } from "api/api";
+import { Verse, VerseData, VerseDictionary } from "../models/models";
 
 type getParallelVersesProps = {
   translations: string[];
@@ -16,7 +15,7 @@ class ParallelVerseSingleton {
   async getParallelVerses({ translations, book, chapter, verseNumbers }: getParallelVersesProps) {
     this.verseData = await getParallelVerses(translations, book, chapter, verseNumbers);
 
-    this.verseData!.forEach((translationGroup) => {
+    this.verseData!.forEach((translationGroup: Verse[]) => {
       if (translationGroup.length > 0)
       {
         const translation = translationGroup[0].translation;
@@ -29,8 +28,9 @@ class ParallelVerseSingleton {
     const verses: Verse[] = this.verseDict[translation];
     let verseText = "";
 
+
     verses.forEach((verse: Verse) => {
-      verseText += verse.text + "\n";
+      verseText += `<p><sup>${verse.verseNumber}</sup> ${verse.text}</p>\n`;
     });
     return verseText.trim() || undefined;
   }

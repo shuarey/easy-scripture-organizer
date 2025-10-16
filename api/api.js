@@ -22,7 +22,13 @@ const getParallelVerses = async (translations, book, chapter, verses) => {
 
     const response = await axios.post(`https://bolls.life/get-parallel-verses/`, body);
 
-    return response.data;
+    const mappedData = response.data.map((translationArray) =>
+      translationArray.map(({ verse, ...rest }) => ({
+        ...rest,
+        verseNumber: verse,
+      }))
+    );
+    return mappedData;
   } catch (error) {
     console.error('Error fetching verse:', error);
     throw error;

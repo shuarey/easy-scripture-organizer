@@ -3,7 +3,7 @@ interface Verse {
   translation: string;
   book: number | string;
   chapter: number;
-  verse: number;
+  verseNumber: number;
   text: string;
 }
 

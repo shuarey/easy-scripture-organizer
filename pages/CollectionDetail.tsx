@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
-import { ScreenContent } from 'components/ScreenContent';
 import { Container } from 'components/Container';
+import { ScreenContent } from 'components/ScreenContent';
+import ScriptureEntry from 'components/ScriptureEntry';
 import { Separator } from 'components/Separator';
-import { ScriptureEntry } from 'components/ScriptureEntry';
 
 type CollectionDetailProps = {
   route: {
@@ -15,14 +14,17 @@ type CollectionDetailProps = {
 export default function CollectionDetail({ route }: CollectionDetailProps) {
   const { CollectionName } = route.params;
 
-  console.log('Collection Name:', CollectionName);
-
   return (
     <Container>
       <ScreenContent>
-        {CollectionName === "Stock Collection" && (
+        {CollectionName === "Stock verses" && (
           <>
-          <ScriptureEntry translations={["WLCC", "NKJV"]} book={1} chapter={1} verseNumbers={[1, 2]} />
+          {/* implement lazy loading here at some point */}
+          <ScriptureEntry translations={["WLCC", "NKJV", "ASV"]} book={1} chapter={1} verseNumbers={[1, 2]} />
+          <Separator />
+          <ScriptureEntry translations={["WLCC", "NKJV"]} book={20} chapter={3} verseNumbers={[5,6]} />
+          <Separator />
+          <ScriptureEntry translations={["WLCC", "NKJV"]} book={40} chapter={1} verseNumbers={[1]} />
           <Separator />
           <ScriptureEntry translations={["TR", "NKJV"]} book={43} chapter={3} verseNumbers={[16]} />
           <Separator />

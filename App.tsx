@@ -1,8 +1,11 @@
-import {createStaticNavigation} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import HomeScreen from './pages/Home';
-import CollectionDetail from './pages/CollectionDetail';
+import { createStaticNavigation } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { StrictMode } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { BookProvider } from './context/dictionaryContext';
 import './global.css';
+import CollectionDetail from './pages/CollectionDetail';
+import HomeScreen from './pages/Home';
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -12,7 +15,9 @@ const RootStack = createNativeStackNavigator({
     },
     CollectionDetail: {
       screen: CollectionDetail,
-      options: { title: 'Collection Detail' },
+      options: ({ route }: { route: { params?: { CollectionName?: string } } }) => ({
+        title: route.params?.CollectionName
+      }),
       initialParams: { CollectionName: 'Default Collection' }
     }
   },
@@ -21,5 +26,13 @@ const RootStack = createNativeStackNavigator({
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return <Navigation />;
+  return (
+    <StrictMode>
+      <SafeAreaProvider>
+        <BookProvider>
+          <Navigation />
+        </BookProvider>
+      </SafeAreaProvider>
+    </StrictMode>
+  );
 }
