@@ -1,4 +1,5 @@
-interface Verse {
+//#region Verse
+export interface Verse {
   pk: number;
   translation: string;
   book: number | string;
@@ -7,17 +8,39 @@ interface Verse {
   text: string;
 }
 
-interface VerseDictionary {
+export interface dbVerseResponse {
+  id: number;
+  book: number;
+  chapter: number;
+  verseNumber: number;
+  created_at: Date;
+}
+
+export interface VerseDictionary {
   [translation: string]: Verse[];
 }
 
-type VerseData = Verse[][];
+export type VerseData = Verse[][];
+//#endregion
 
-type BookEntry = {
+//#region Collection
+export interface Collection {
+  id: number;
+  name: string;
+  description: string;
+  created_at: Date;
+}
+//#endregion
+
+export interface CollectionVerse {
+  pk: number;
+  collection_pk: number;
+  verse_pk: number;
+}
+
+export type BookEntry = {
     bookid: number;
     name: string;
     chapters: number;
     chronorder: number;
 }
-
-export { Verse, VerseData, VerseDictionary, BookEntry };

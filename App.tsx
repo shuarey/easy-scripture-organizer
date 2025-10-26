@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StrictMode } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { BookProvider } from './context/dictionaryContext';
+import { SQLiteProvider } from 'expo-sqlite';
+import { databaseProps } from 'database/database';
 import './global.css';
 import CollectionDetail from './pages/CollectionDetail';
 import HomeScreen from './pages/Home';
@@ -11,7 +13,7 @@ const RootStack = createNativeStackNavigator({
   screens: {
     Home: {
       screen: HomeScreen,
-      options: { title: 'Home' }
+      // options: { title: 'Home' }
     },
     CollectionDetail: {
       screen: CollectionDetail,
@@ -26,12 +28,14 @@ const RootStack = createNativeStackNavigator({
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-  return (
+    return (
     <StrictMode>
       <SafeAreaProvider>
-        <BookProvider>
-          <Navigation />
-        </BookProvider>
+        <SQLiteProvider {...databaseProps}>
+          <BookProvider>
+            <Navigation />
+          </BookProvider>
+        </SQLiteProvider>
       </SafeAreaProvider>
     </StrictMode>
   );

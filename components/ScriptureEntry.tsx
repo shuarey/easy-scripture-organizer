@@ -4,6 +4,7 @@ import { Text, View } from 'react-native';
 import { parallelVerseService } from 'services/parallelVerseService';
 import { useDictionary } from 'context/dictionaryContext';
 import RenderHtml from './RenderHtml';
+import { LoadingScreen } from './LoadingScreen';
 
 type ScriptureEntryProps = {
   translations: string[];
@@ -16,8 +17,10 @@ const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: Scripture
   const [verses, setVerses] = useState<Verse[]>([]);
   const [verseSpan, setVerseSpan] = useState<string>("");
   const { dictionary } = useDictionary();
+  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
+    setFetching(true);
     setVerseSpan(verseNumbers.length > 1 ?
        `${verseNumbers[0]}-${verseNumbers[verseNumbers.length - 1]}` : `${verseNumbers[0]}`);
 
@@ -33,9 +36,11 @@ const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: Scripture
           text: verseText || "",
         } as Verse; 
       })
-    ).then(setVerses);
+    ).finally(() => setFetching(false)).then(setVerses);
   }, []);
 
+  if (fetching) return <LoadingScreen />;
+  
   return (
     <View>
       {verses.map((verse, idx) => (
