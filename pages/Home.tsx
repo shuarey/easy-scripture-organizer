@@ -13,7 +13,7 @@ import { LoadingScreen } from 'components/LoadingScreen';
 
 type RootStackParamList = {
   Home: undefined;
-  CollectionDetail: { CollectionName: string };
+  CollectionView: { CollectionName: string };
 };
 
 export default function HomeScreen() {
@@ -57,14 +57,14 @@ export default function HomeScreen() {
   return (
     <Container>
       <ScreenContent>
-        <PickerComponent 
-          label='Select a collection' 
-          items={dbCollections} 
+        <PickerComponent
+          label=""
+          items={dbCollections}
           onSelect={handleSelect}
           selectedValue={selectedCollection}
         />
         <Button title="Load Verses" onPress={
-          () => navigation.navigate('CollectionDetail', { CollectionName: selectedCollection })
+          () => navigation.navigate('CollectionView', { CollectionName: selectedCollection })
         } />
       </ScreenContent>
     </Container>

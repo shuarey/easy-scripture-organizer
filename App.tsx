@@ -6,22 +6,42 @@ import { BookProvider } from './context/dictionaryContext';
 import { SQLiteProvider } from 'expo-sqlite';
 import { databaseProps } from 'database/database';
 import './global.css';
-import CollectionDetail from './pages/CollectionDetail';
+import CollectionView from './pages/CollectionView';
 import HomeScreen from './pages/Home';
+import CollectionListView from './pages/CollectionListView';
+import CollectionDetailView from './pages/CollectionDetailView';
 
 const RootStack = createNativeStackNavigator({
   screens: {
     Home: {
       screen: HomeScreen,
-      // options: { title: 'Home' }
-    },
-    CollectionDetail: {
-      screen: CollectionDetail,
+      options: () => ({
+        animation: 'slide_from_left',
+        headerShown: false,
+      })},
+    CollectionView: {
+      screen: CollectionView,
       options: ({ route }: { route: { params?: { CollectionName?: string } } }) => ({
-        title: route.params?.CollectionName
+        animation: 'slide_from_right',
+        title: route.params?.CollectionName,
+        headerShown: false,
       }),
       initialParams: { CollectionName: 'Default Collection' }
-    }
+    },
+    CollectionListView: {
+      screen: CollectionListView,
+      options: () => ({
+        animation: 'slide_from_right',
+        headerShown: false,
+      })
+    },
+    CollectionDetailView: {
+      screen: CollectionDetailView,
+      options: ({ route }: { route: { params?: { collectionId?: number } } }) => ({
+        animation: 'slide_from_right',
+        headerShown: false,
+      })
+    },
   },
 });
 

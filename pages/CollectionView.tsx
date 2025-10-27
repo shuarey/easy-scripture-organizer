@@ -7,7 +7,7 @@ import { getVerseByID } from 'services/dbVerseService';
 import { useSQLiteContext } from 'expo-sqlite';
 import { LoadingScreen } from 'components/LoadingScreen';
 
-type CollectionDetailProps = {
+type CollectionViewProps = {
   route: {
     params: {
       CollectionName: string;
@@ -15,7 +15,7 @@ type CollectionDetailProps = {
   };
 };
 
-export default function CollectionDetail({ route }: CollectionDetailProps) {
+export default function CollectionView({ route }: CollectionViewProps) {
   const db = useSQLiteContext();
   const [ dbVerse, setDbVerse ] = useState<{
     book: number;
@@ -43,7 +43,7 @@ export default function CollectionDetail({ route }: CollectionDetailProps) {
 
   return (
     <Container>
-      <ScreenContent>
+      <ScreenContent title={CollectionName}>
         {CollectionName === "Stock verses" && (
           <>
           {/* implement lazy loading here at some point. 
