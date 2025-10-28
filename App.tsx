@@ -30,8 +30,8 @@ const RootStack = createNativeStackNavigator({
     },
     CollectionListView: {
       screen: CollectionListView,
-      options: () => ({
-        animation: 'slide_from_right',
+      options: ({ route }: { route: { params?: { slideDirection?: string } } }) => ({
+        animation: route.params?.slideDirection === 'left' ? 'slide_from_left' : 'slide_from_right',
         headerShown: false,
       })
     },

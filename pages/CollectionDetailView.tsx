@@ -1,44 +1,58 @@
 import { Container } from "components/Container";
 import { ScreenContent } from "components/ScreenContent";
 import { useEffect, useState } from 'react';
-import { deleteCollection, getCollectionById } from "services/dbCollectionService";
+import { deleteCollection, getCollectionById, insertCollection } from "services/dbCollectionService";
 import { useSQLiteContext } from "expo-sqlite";
 import { LoadingScreen } from "components/LoadingScreen";
 import { Input, Button, Overlay } from '@rneui/themed';
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { Separator } from "components/Separator";
 import { updateCollection } from "services/dbCollectionService";
 import { Collection } from "models/models";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  CollectionListView: { slideDirection: string };
+};
 
 type CollectionProps = {
   route: {
     params: {
-      collectionId: number;
+      collectionId?: number;
     };
   };
 };
 
 export default function CollectionDetailView({ route }: CollectionProps) {
   const db = useSQLiteContext();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { collectionId } = route.params;
+
   const [loading, setLoading] = useState(true);
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [collection, setCollection] = useState<Collection | null>(null);
 
-  // local controlled inputs so RNE Input components remain editable
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
 
   useEffect(() => {
     setLoading(true);
-    getCollectionById(db, collectionId)
+    if (!collectionId) {
+      setLoading(false);
+      return;
+    }
+    getCollectionById(db, collectionId!)
       .then((data) => {
         setCollection(data);
         setName(data?.name ?? '');
         setDescription(data?.description ?? '');
+      }).then(() => {
+        updateCollection(db, collection as Collection);
       })
       .finally(() => setLoading(false));
-  }, [db, collectionId]);
+  }, [collectionId]);
 
   const handleSaveChanges = () => {
     if (collection) {
@@ -46,6 +60,17 @@ export default function CollectionDetailView({ route }: CollectionProps) {
       updateCollection(db, updated)
         .then(() => {
           setCollection(updated);
+          setShowSuccessOverlay(true);
+        });
+    }
+    else{
+      const newCollection: Omit<Collection, 'id' | 'created_at'> = {
+        name,
+        description
+      };
+      insertCollection(db, newCollection)
+        .then(() => {
+          setCollection(newCollection as Collection);
           setShowSuccessOverlay(true);
         });
     }
@@ -62,25 +87,27 @@ export default function CollectionDetailView({ route }: CollectionProps) {
 
   if (loading) return <LoadingScreen />;
 
-  if (showSuccessOverlay) {
-    return (
-      <Overlay isVisible={true} onBackdropPress={() => setShowSuccessOverlay(false)}>
-        <Text>Changes saved successfully!</Text>
-      </Overlay>
-    )
-  }
-
   return (
     <Container>
-        <ScreenContent title="Collection Details">
-          <Input placeholder="Collection Name" value={name} onChangeText={setName} />
-          <Input placeholder="Collection Description" value={description} onChangeText={setDescription} />
-          <View className="flex-auto">
-            <Button title="Save Changes" onPress={() => {handleSaveChanges()}} />
-            <Separator />
-            <Button title="Delete Collection" color="#f55347" onPress={() => {handleDeleteCollection()}} />
-          </View>
-        </ScreenContent>
+      <ScreenContent title="Collection Details">
+        <Input placeholder="Collection Name" value={name} onChangeText={setName} />
+        <Input placeholder="Collection Description" value={description} onChangeText={setDescription} />
+        <View className="flex-auto">
+          <Button title={`Save ${collectionId ? 'Changes' : 'Collection'}`} onPress={() => { handleSaveChanges() }} />
+          {collectionId && (
+            <>
+              <Separator />
+              <Button title="Delete Collection" color="#f55347" onPress={() => { handleDeleteCollection() }} />
+            </>
+          )}
+        </View>
+        <Overlay
+          isVisible={showSuccessOverlay}
+          onBackdropPress={() => setShowSuccessOverlay(false)}
+          onDismiss={() => navigation.navigate('CollectionListView', { slideDirection: 'left' })}>
+          <Ionicons name="checkmark-circle" color="black" size={48} />
+        </Overlay>
+      </ScreenContent>
     </Container>
   );
 }

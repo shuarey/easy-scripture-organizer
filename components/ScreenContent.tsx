@@ -53,14 +53,8 @@ export const ScreenContent = ({ children, title }: ScreenContentProps) => {
             </View>
           }
           centerComponent={
-            //if title prop is passed, remove touchableopacity element as wrapper
-            title ? (
-              <Text style={{ color: 'white', fontSize: 20 }}>{title ?? 'VerseMark'}</Text>
-            ) : (
-              <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-                <Text style={{ color: 'white', fontSize: 20 }}>{title ?? 'VerseMark'}</Text>
-              </TouchableOpacity>
-            )}
+            <Text style={{ color: 'white', fontSize: 20 }}>{title ?? 'VerseMark'}</Text>
+          }
           rightComponent={
             <View ref={menuButtonRef}>
               <TouchableOpacity onPress={handleMenuPress}>

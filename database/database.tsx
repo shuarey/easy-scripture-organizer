@@ -11,7 +11,7 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   console.log('Current db version: ', versionRow);
   if (currentVersion >= DATABASE_VERSION) {
     console.log('✅ DB up to date');
-    return;
+    return
   }
 
   // Initial setup (v1)
@@ -76,7 +76,14 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   }
 
   // Future migrations can go here
-  await db.execAsync(`ALTER TABLE COLLECTION ADD COLUMN description TEXT DEFAULT ''`);
+  await db.execAsync(`ALTER TABLE COLLECTION ADD COLUMN description TEXT DEFAULT ''`).then(() => {
+    console.log('✅ Added description column to COLLECTION table');
+  })
+  .catch((error) => {
+    console.error('Error adding description column to COLLECTION table:', error);
+  }).finally(() => {
+    console.log('adding db column step complete');
+  });
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   console.log('✅ Migration complete!');

@@ -1,4 +1,4 @@
-import { ListItem } from "@rneui/base";
+import { Button, ListItem } from "@rneui/base";
 import { Container } from "components/Container";
 import { ScreenContent } from "components/ScreenContent";
 import { useNavigation } from '@react-navigation/native';
@@ -52,6 +52,12 @@ export default function CollectionListView() {
             </ListItem.Content>
           </ListItem>
         ))}
+        <Button
+          title="Add New"
+          onPress={() => {
+            navigation.navigate('CollectionDetailView', { collectionId: null as any });
+          }}
+        />
       </ScreenContent>
     </Container>
   );
