@@ -1,11 +1,17 @@
 import { createStaticNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StrictMode } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { BookProvider } from './context/dictionaryContext';
+
+import { BookProvider } from './context/bookContext';
+import { LanguageProvider } from './context/languageContext';
+
 import { SQLiteProvider } from 'expo-sqlite';
 import { databaseProps } from 'database/database';
+
 import './global.css';
+
 import CollectionView from './pages/CollectionView';
 import HomeScreen from './pages/Home';
 import CollectionListView from './pages/CollectionListView';
@@ -21,12 +27,11 @@ const RootStack = createNativeStackNavigator({
       })},
     CollectionView: {
       screen: CollectionView,
-      options: ({ route }: { route: { params?: { CollectionName?: string } } }) => ({
+      options: ({ route }: { route: { params?: { CollectionName?: string; CollectionKey?: number } } }) => ({
         animation: 'slide_from_right',
         title: route.params?.CollectionName,
         headerShown: false,
-      }),
-      initialParams: { CollectionName: 'Default Collection' }
+      })
     },
     CollectionListView: {
       screen: CollectionListView,
@@ -50,13 +55,17 @@ const Navigation = createStaticNavigation(RootStack);
 export default function App() {
     return (
     <StrictMode>
-      <SafeAreaProvider>
-        <SQLiteProvider {...databaseProps}>
-          <BookProvider>
-            <Navigation />
-          </BookProvider>
-        </SQLiteProvider>
-      </SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <SQLiteProvider {...databaseProps}>
+            <LanguageProvider>
+              <BookProvider>
+                <Navigation />
+              </BookProvider>
+            </LanguageProvider>
+          </SQLiteProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
     </StrictMode>
   );
 }

@@ -5,7 +5,7 @@ import { deleteCollection, getCollectionById, insertCollection } from "services/
 import { useSQLiteContext } from "expo-sqlite";
 import { LoadingScreen } from "components/LoadingScreen";
 import { Input, Button, Overlay } from '@rneui/themed';
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { Separator } from "components/Separator";
 import { updateCollection } from "services/dbCollectionService";
 import { Collection } from "models/models";
@@ -32,6 +32,7 @@ export default function CollectionDetailView({ route }: CollectionProps) {
 
   const [loading, setLoading] = useState(true);
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+  const [showErrorOverlay, setShowErrorOverlay] = useState(false);
   const [collection, setCollection] = useState<Collection | null>(null);
 
   const [name, setName] = useState<string>('');
@@ -55,6 +56,11 @@ export default function CollectionDetailView({ route }: CollectionProps) {
   }, [collectionId]);
 
   const handleSaveChanges = () => {
+    if (name.trim() === '') {
+      setShowErrorOverlay(true);
+      return;
+    }
+
     if (collection) {
       const updated: Collection = { ...collection, name, description } as Collection;
       updateCollection(db, updated)
@@ -90,7 +96,11 @@ export default function CollectionDetailView({ route }: CollectionProps) {
   return (
     <Container>
       <ScreenContent title="Collection Details">
-        <Input placeholder="Collection Name" value={name} onChangeText={setName} />
+        <Input 
+          placeholder="Collection Name" 
+          value={name}
+          onChangeText={setName}
+          />
         <Input placeholder="Collection Description" value={description} onChangeText={setDescription} />
         <View className="flex-auto">
           <Button title={`Save ${collectionId ? 'Changes' : 'Collection'}`} onPress={() => { handleSaveChanges() }} />
@@ -106,6 +116,14 @@ export default function CollectionDetailView({ route }: CollectionProps) {
           onBackdropPress={() => setShowSuccessOverlay(false)}
           onDismiss={() => navigation.navigate('CollectionListView', { slideDirection: 'left' })}>
           <Ionicons name="checkmark-circle" color="black" size={48} />
+        </Overlay>
+        <Overlay
+          isVisible={showErrorOverlay}
+          onBackdropPress={() => setShowErrorOverlay(false)}>
+          <View>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Error</Text>
+            <Text style={{ fontSize: 16 }}>Collection Name cannot be empty.</Text>
+          </View>
         </Overlay>
       </ScreenContent>
     </Container>

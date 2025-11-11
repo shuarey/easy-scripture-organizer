@@ -11,7 +11,10 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   console.log('Current db version: ', versionRow);
   if (currentVersion >= DATABASE_VERSION) {
     console.log('✅ DB up to date');
-    return
+    // await db.execAsync(`PRAGMA foreign_keys = ON;
+    //   PRAGMA journal_mode = WAL;
+    //   DELETE FROM COLLECTION WHERE name IS NULL OR name = '';`);
+    //return;
   }
 
   // Initial setup (v1)
@@ -76,14 +79,66 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   }
 
   // Future migrations can go here
-  await db.execAsync(`ALTER TABLE COLLECTION ADD COLUMN description TEXT DEFAULT ''`).then(() => {
-    console.log('✅ Added description column to COLLECTION table');
-  })
-  .catch((error) => {
-    console.error('Error adding description column to COLLECTION table:', error);
-  }).finally(() => {
-    console.log('adding db column step complete');
-  });
+  // await db.execAsync(`ALTER TABLE COLLECTION ADD COLUMN description TEXT DEFAULT ''`).then(() => {
+  //   console.log('✅ Added description column to COLLECTION table');
+  // })
+  // .catch((error) => {
+  //   console.error('Error adding description column to COLLECTION table:', error);
+  // }).finally(() => {
+  //   console.log('adding db column step complete');
+  // });
+
+  // await db.execAsync(`ALTER TABLE COLLECTION_VERSE ADD COLUMN versions TEXT DEFAULT 'NKJV'`).then(() => {
+  //   console.log('✅ Added versions column to COLLECTION_VERSE table');
+  // })
+  // .catch((error) => {
+  //   console.error('Error adding versions column to COLLECTION_VERSE table:', error);
+  // }).finally(() => {
+  //   console.log('adding db column step complete');
+  // });
+
+  // await db.execAsync(`ALTER TABLE COLLECTION_VERSE ADD COLUMN notes TEXT DEFAULT ''`).then(() => {
+  //   console.log('✅ Added notes column to COLLECTION_VERSE table');
+  // })
+  // .catch((error) => {
+  //   console.error('Error adding notes column to COLLECTION_VERSE table:', error);
+  // }).finally(() => {
+  //   console.log('adding db column step complete');
+  // });
+
+  // await db.execAsync(`ALTER TABLE COLLECTION_VERSE ADD COLUMN ordinal INTEGER DEFAULT 0`).then(() => {
+  //   console.log('✅ Added ordinal column to COLLECTION_VERSE table');
+  // })
+  // .catch((error) => {
+  //   console.error('Error adding ordinal column to COLLECTION_VERSE table:', error);
+  // }).finally(() => {
+  //   console.log('adding db column step complete');
+  // });
+
+  // await db.execAsync(`
+  //       PRAGMA foreign_keys = OFF;
+
+  //       CREATE TABLE COLLECTION_new (
+  //       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  //       name TEXT NOT NULL CHECK(name <> ''),
+  //       description TEXT DEFAULT '',
+  //       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  //     );
+
+  //       INSERT INTO COLLECTION_new (id, name, description, created_at)
+  //       SELECT id, name, description, created_at FROM COLLECTION;
+
+  //       DROP TABLE COLLECTION;
+
+  //       ALTER TABLE COLLECTION_new RENAME TO COLLECTION;
+
+  //       PRAGMA foreign_keys = ON;
+  //     `);
+
+  // await db.execAsync(`ALTER TABLE VERSE ADD UNIQUE_INDEX idx_verse_book_chapter_verseNumber (book, chapter, verseNumber);`);
+
+  // await db.execAsync(`DELETE FROM COLLECTION_VERSE;
+  //                     DELETE FROM VERSE;`)
 
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   console.log('✅ Migration complete!');

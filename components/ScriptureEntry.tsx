@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from 'react';
 import { Verse } from 'models/models';
-import { Text, View } from 'react-native';
+import { ListItem } from '@rneui/themed'
 import { parallelVerseService } from 'services/parallelVerseService';
-import { useDictionary } from 'context/dictionaryContext';
+import { useBookDictionary } from 'context/bookContext';
 import RenderHtml from './RenderHtml';
 import { LoadingScreen } from './LoadingScreen';
 
@@ -16,8 +16,9 @@ type ScriptureEntryProps = {
 const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: ScriptureEntryProps) => {
   const [verses, setVerses] = useState<Verse[]>([]);
   const [verseSpan, setVerseSpan] = useState<string>("");
-  const { dictionary } = useDictionary();
+  const {dictionary} = useBookDictionary();
   const [fetching, setFetching] = useState(true);
+  const [showDetailContent, setShowDetailContent] = useState(false);
 
   useEffect(() => {
     setFetching(true);
@@ -39,19 +40,25 @@ const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: Scripture
     ).finally(() => setFetching(false)).then(setVerses);
   }, []);
 
+  function handleListItemOnPress() {
+    setShowDetailContent(!showDetailContent);
+  }
+
   if (fetching) return <LoadingScreen />;
   
   return (
-    <View>
+    <>
       {verses.map((verse, idx) => (
-        <View key={idx} style={{ marginBottom: 16 }}>
-          <Text className='text-lg font-medium'>
-            {verse.book} {chapter}:{verseSpan} ({verse.translation})
-          </Text>
-          <RenderHtml html={verse.text} />
-        </View>
+        <ListItem key={idx} onPress={handleListItemOnPress}>
+          <ListItem.Content>
+            <ListItem.Title className='flex-auto font-medium text-md'>
+              {verse.book} {chapter}:{verseSpan} ({verse.translation})
+            </ListItem.Title>
+            {showDetailContent && ( <RenderHtml html={verse.text} />)}
+          </ListItem.Content> 
+        </ListItem>
       ))}
-    </View>
+    </>
   );
 };
 

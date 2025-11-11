@@ -32,6 +32,12 @@ export interface Collection {
 }
 //#endregion
 
+export type Translation = {
+  short_name: string;
+  full_name: string;
+  updated: number;
+}
+
 export interface CollectionVerse {
   pk: number;
   collection_pk: number;

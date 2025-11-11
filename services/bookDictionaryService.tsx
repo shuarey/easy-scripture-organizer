@@ -1,5 +1,5 @@
 import { BookEntry } from "../models/models";
-import { useDictionary } from "context/dictionaryContext";
+import { useBookDictionary } from "context/bookContext";
 import { getBooks } from "api/api";
 
 class BookDictionarySingleton {
@@ -10,7 +10,7 @@ class BookDictionarySingleton {
    * @param translations The translation (key) to query.
    */
   async setBooks(translations: string[]) {
-    const { setDictionary } = useDictionary();
+    const { setDictionary } = useBookDictionary();
     translations.forEach(async (translation) => {
       if (!this.cache.has(translation)) {
         const books = await getBooks(translation);
@@ -19,8 +19,6 @@ class BookDictionarySingleton {
       }
     });
   }
-
-
 
   getBookFromCache(translation: string, bookID: number): BookEntry | undefined {
     if (this.cache.has(translation)) {

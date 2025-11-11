@@ -2,18 +2,20 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-native';
-import { bookDict } from 'services/translationDictionaryService';
+
+import { bookDict } from 'services/bookDictionaryService';
+import { getAllCollections } from 'services/dbCollectionService';
 
 import { Container } from 'components/Container';
 import { PickerComponent } from 'components/Picker';
-import { ScreenContent } from 'components/ScreenContent';
-import { getAllCollections } from 'services/dbCollectionService';
-import { useSQLiteContext } from 'node_modules/expo-sqlite/build/hooks';
 import { LoadingScreen } from 'components/LoadingScreen';
+import { ScreenContent } from 'components/ScreenContent';
+
+import { useSQLiteContext } from 'node_modules/expo-sqlite/build/hooks';
 
 type RootStackParamList = {
   Home: undefined;
-  CollectionView: { CollectionName: string };
+  CollectionView: { CollectionName: string; CollectionKey: number };
 };
 
 export default function HomeScreen() {
@@ -27,7 +29,9 @@ export default function HomeScreen() {
   }[]>([]);
 
   const [loading, setLoading] = useState(true);
-  const [selectedCollection, setSelectedCollection] = useState("");
+  const [loadVersesDisabled, setLoadVersesDisabled] = useState(true);
+  // store only the selected collection id for simplicity
+  const [selectedCollection, setSelectedCollection] = useState<number | null>(null);
 
   bookDict.setBooks(["WLCC", "NKJV", "ASV", "TR"]);
 
@@ -44,8 +48,13 @@ export default function HomeScreen() {
     .finally(() => setLoading(false));
   }, []);
 
-  const handleSelect = (value: string) => {
-    setSelectedCollection(value);
+  const handleSelect = (key: number) => {
+    setSelectedCollection(key === 0 ? null : key);
+    if (key === 0) {
+      setLoadVersesDisabled(true);
+      return;
+    }
+    setLoadVersesDisabled(false);
   }
 
   if (loading) {
@@ -58,13 +67,19 @@ export default function HomeScreen() {
     <Container>
       <ScreenContent>
         <PickerComponent
-          label=""
+          label=''
           items={dbCollections}
           onSelect={handleSelect}
-          selectedValue={selectedCollection}
+          selectedValue={selectedCollection ?? 0}
         />
-        <Button title="Load Verses" onPress={
-          () => navigation.navigate('CollectionView', { CollectionName: selectedCollection })
+        <Button disabled={loadVersesDisabled} title="Load Verses" onPress={ () => {
+          const selectedId = selectedCollection!;
+          const selectedName = dbCollections.find(c => c.id === selectedId)?.text ?? '';
+          navigation.navigate('CollectionView', { 
+            CollectionName: selectedName, 
+            CollectionKey: selectedId 
+          });
+        }
         } />
       </ScreenContent>
     </Container>

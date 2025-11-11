@@ -21,4 +21,4 @@ export const BookProvider = ({ children }: { children: React.ReactNode }) => {
     );
 }
 
-export const useDictionary = () => useContext(DictionaryContext);
+export const useBookDictionary = () => useContext(DictionaryContext);
