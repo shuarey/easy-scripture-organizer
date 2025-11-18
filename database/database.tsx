@@ -140,6 +140,21 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   // await db.execAsync(`DELETE FROM COLLECTION_VERSE;
   //                     DELETE FROM VERSE;`)
 
+  // await db.execAsync(`
+  //       CREATE TABLE IF NOT EXISTS USER_LANGUAGE (
+  //       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  //       name TEXT NOT NULL,
+  //       deleted TEXT DEFAULT 'N' CHECK (deleted IN ('Y', 'N')),
+  //       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  //     );
+  //   `);
+
+  // await db.execAsync(`
+  //       CREATE UNIQUE INDEX IF NOT EXISTS idx_user_language_one_deleted
+  //       ON USER_LANGUAGE(name)
+  //       WHERE deleted = 'N';
+  //   `)
+
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   console.log('✅ Migration complete!');
 }

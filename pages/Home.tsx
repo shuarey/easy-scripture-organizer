@@ -1,5 +1,3 @@
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-native';
 
@@ -10,17 +8,13 @@ import { Container } from 'components/Container';
 import { PickerComponent } from 'components/Picker';
 import { LoadingScreen } from 'components/LoadingScreen';
 import { ScreenContent } from 'components/ScreenContent';
+import { useAppNavigation } from 'components/Navigation';
 
 import { useSQLiteContext } from 'node_modules/expo-sqlite/build/hooks';
 
-type RootStackParamList = {
-  Home: undefined;
-  CollectionView: { CollectionName: string; CollectionKey: number };
-};
-
 export default function HomeScreen() {
   const db = useSQLiteContext();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useAppNavigation();
 
   const [dbCollections, setDbCollections] = useState<{
     id: number;
@@ -30,7 +24,6 @@ export default function HomeScreen() {
 
   const [loading, setLoading] = useState(true);
   const [loadVersesDisabled, setLoadVersesDisabled] = useState(true);
-  // store only the selected collection id for simplicity
   const [selectedCollection, setSelectedCollection] = useState<number | null>(null);
 
   bookDict.setBooks(["WLCC", "NKJV", "ASV", "TR"]);
@@ -57,11 +50,7 @@ export default function HomeScreen() {
     setLoadVersesDisabled(false);
   }
 
-  if (loading) {
-    return (
-      <LoadingScreen />
-    );
-  }
+  if (loading) { return ( <LoadingScreen /> ); }
   
   return (
     <Container>

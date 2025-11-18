@@ -32,6 +32,16 @@ export interface Collection {
 }
 //#endregion
 
+export type UserLanguage = {
+  name: string;
+  deleted: string;
+} 
+
+export type Language = {
+  id: number;
+  name: string;
+}
+
 export type Translation = {
   short_name: string;
   full_name: string;

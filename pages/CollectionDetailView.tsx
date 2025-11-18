@@ -1,21 +1,18 @@
-import { Container } from "components/Container";
-import { ScreenContent } from "components/ScreenContent";
 import { useEffect, useState } from 'react';
-import { deleteCollection, getCollectionById, insertCollection } from "services/dbCollectionService";
 import { useSQLiteContext } from "expo-sqlite";
-import { LoadingScreen } from "components/LoadingScreen";
 import { Input, Button, Overlay } from '@rneui/themed';
 import { View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+
+import { Container } from "components/Container";
+import { ScreenContent } from "components/ScreenContent";
 import { Separator } from "components/Separator";
+import { LoadingScreen } from "components/LoadingScreen";
+import { useAppNavigation } from "components/Navigation";
+
+import { deleteCollection, getCollectionById, insertCollection } from "services/dbCollectionService";
 import { updateCollection } from "services/dbCollectionService";
 import { Collection } from "models/models";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-type RootStackParamList = {
-  CollectionListView: { slideDirection: string };
-};
 
 type CollectionProps = {
   route: {
@@ -27,7 +24,7 @@ type CollectionProps = {
 
 export default function CollectionDetailView({ route }: CollectionProps) {
   const db = useSQLiteContext();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useAppNavigation();
   const { collectionId } = route.params;
 
   const [loading, setLoading] = useState(true);

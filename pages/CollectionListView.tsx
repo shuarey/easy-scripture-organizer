@@ -1,21 +1,18 @@
 import { Button, ListItem } from "@rneui/base";
-import { Container } from "components/Container";
-import { ScreenContent } from "components/ScreenContent";
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { getAllCollections } from "services/dbCollectionService";
-import { LoadingScreen } from "components/LoadingScreen";
 
-type RootStackParamList = {
-  CollectionDetailView: { collectionId: number };
-};
+import { Container } from "components/Container";
+import { ScreenContent } from "components/ScreenContent";
+import { LoadingScreen } from "components/LoadingScreen";
+import { useAppNavigation } from "components/Navigation";
+
+import { getAllCollections } from "services/dbCollectionService";
 
 export default function CollectionListView() {
   const db = useSQLiteContext();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useAppNavigation();
   
   const [loading, setLoading] = useState(true);
   const [dbCollections, setDbCollections] = useState<{

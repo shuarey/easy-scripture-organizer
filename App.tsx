@@ -5,7 +5,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { BookProvider } from './context/bookContext';
-import { LanguageProvider } from './context/languageContext';
 
 import { SQLiteProvider } from 'expo-sqlite';
 import { databaseProps } from 'database/database';
@@ -16,6 +15,7 @@ import CollectionView from './pages/CollectionView';
 import HomeScreen from './pages/Home';
 import CollectionListView from './pages/CollectionListView';
 import CollectionDetailView from './pages/CollectionDetailView';
+import SettingsScreen from 'pages/Settings';
 
 const RootStack = createNativeStackNavigator({
   screens: {
@@ -24,7 +24,8 @@ const RootStack = createNativeStackNavigator({
       options: () => ({
         animation: 'slide_from_left',
         headerShown: false,
-      })},
+      })
+    },
     CollectionView: {
       screen: CollectionView,
       options: ({ route }: { route: { params?: { CollectionName?: string; CollectionKey?: number } } }) => ({
@@ -47,6 +48,13 @@ const RootStack = createNativeStackNavigator({
         headerShown: false,
       })
     },
+    SettingsScreen: {
+      screen: SettingsScreen,
+      options: () => ({
+        animation: 'slide_from_right',
+        headerShown: false,
+      })
+    },
   },
 });
 
@@ -58,11 +66,9 @@ export default function App() {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <SQLiteProvider {...databaseProps}>
-            <LanguageProvider>
               <BookProvider>
                 <Navigation />
               </BookProvider>
-            </LanguageProvider>
           </SQLiteProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
