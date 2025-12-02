@@ -10,7 +10,7 @@ import { LoadingScreen } from 'components/LoadingScreen';
 import { ScreenContent } from 'components/ScreenContent';
 import { useAppNavigation } from 'components/Navigation';
 
-import { useSQLiteContext } from 'node_modules/expo-sqlite/build/hooks';
+import { useSQLiteContext } from 'expo-sqlite';
 
 export default function HomeScreen() {
   const db = useSQLiteContext();

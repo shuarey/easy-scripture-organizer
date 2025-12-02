@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSQLiteContext } from "expo-sqlite";
-import { Input, Button, Overlay } from '@rneui/themed';
+import { Input, Button, Overlay } from 'react-native-elements';
 import { View, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -104,7 +104,7 @@ export default function CollectionDetailView({ route }: CollectionProps) {
           {collectionId && (
             <>
               <Separator />
-              <Button title="Delete Collection" color="#f55347" onPress={() => { handleDeleteCollection() }} />
+              <Button title="Delete Collection" buttonStyle={{ backgroundColor: '#f55347' }} onPress={() => { handleDeleteCollection() }} />
             </>
           )}
         </View>

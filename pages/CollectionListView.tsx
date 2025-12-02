@@ -1,4 +1,4 @@
-import { Button, ListItem } from "@rneui/base";
+import { Button, ListItem } from 'react-native-elements';
 import { useSQLiteContext } from 'expo-sqlite';
 import { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";

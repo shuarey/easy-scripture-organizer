@@ -1,7 +1,7 @@
 import MultiSelect from "react-native-multiple-select";
 import { useWindowDimensions } from "react-native";
 import { useEffect, useState } from "react";
-import { Button } from "@rneui/themed";
+import { Button } from "react-native-elements";
 import { useSQLiteContext } from "expo-sqlite";
 
 import languageTranslationJSON from 'assets/Translations.json';

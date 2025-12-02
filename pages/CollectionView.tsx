@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import { getVersesByCollectionId, insertVerse } from 'services/dbVerseService';
 import { useSQLiteContext } from 'expo-sqlite';
 import { LoadingScreen } from 'components/LoadingScreen';
-import { Button } from '@rneui/themed';
-import { Input, Overlay } from '@rneui/base';
+import { Button, Input, Overlay } from 'react-native-elements';
 import { insertCollectionVerse } from 'services/dbCollectionVerseService';
 import { PickerComponent } from 'components/Picker';
 

@@ -1,5 +1,5 @@
 import { ScrollView, TouchableOpacity, View, Text, LayoutChangeEvent } from 'react-native';
-import { Header as HeaderRNE, ListItem, Overlay } from '@rneui/themed';
+import { Header as HeaderRNE, ListItem, Overlay } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
 import { useSQLiteContext } from 'expo-sqlite';

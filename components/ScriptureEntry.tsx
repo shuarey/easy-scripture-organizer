@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from 'react';
 import { Verse } from 'models/models';
-import { ListItem } from '@rneui/themed'
+import { ListItem } from 'react-native-elements'
 import { parallelVerseService } from 'services/parallelVerseService';
 import { useBookDictionary } from 'context/bookContext';
 import RenderHtml from './RenderHtml';
