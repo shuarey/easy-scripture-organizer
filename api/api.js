@@ -14,11 +14,11 @@ const getBooks = async (translation) => {
 const getParallelVerses = async (translations, book, chapter, verses) => {
   try {
     const body = {
-        translations: translations,
-        book: book,
-        chapter: chapter,
-        verses: verses
-    }
+      translations: translations,
+      book: book,
+      chapter: chapter,
+      verses: verses,
+    };
 
     const response = await axios.post(`https://bolls.life/get-parallel-verses/`, body);
 

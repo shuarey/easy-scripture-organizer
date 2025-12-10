@@ -155,6 +155,32 @@ export async function migrateDatabase(db: SQLiteDatabase) {
   //       WHERE deleted = 'N';
   //   `)
 
+  //   await db.execAsync(`
+  //   -- Performance & integrity
+  //   PRAGMA journal_mode = WAL;
+  //   PRAGMA foreign_keys = ON;
+  //   PRAGMA foreign_keys = OFF;
+
+  //   -- Tables
+
+  //   CREATE TABLE IF NOT EXISTS VERSE_NEW (
+  //     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+  //     book INTEGER NOT NULL,
+  //     chapter INTEGER NOT NULL,
+  //     verseNumber TEXT NOT NULL,
+  //     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  //   );
+
+  //   INSERT INTO VERSE_NEW (id, book, chapter, verseNumber, created_at)
+  //   SELECT id, book, chapter, CAST(verseNumber AS TEXT), created_at FROM VERSE;
+
+  //   DROP TABLE VERSE;
+
+  //   ALTER TABLE VERSE_NEW RENAME TO VERSE;
+
+  //   PRAGMA foreign_keys = ON;
+  // `);
+
   await db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   console.log('✅ Migration complete!');
 }

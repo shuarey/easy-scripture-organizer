@@ -1,6 +1,7 @@
-import { BookEntry } from "../models/models";
-import { useBookDictionary } from "context/bookContext";
-import { getBooks } from "api/api";
+import { BookEntry, dbBookEntryResponse } from '../models/models';
+import { useBookDictionary } from 'context/bookContext';
+import BookChapterVerseCountJSON from '../assets/BookChapterVerseCount.json';
+import { getBooks } from 'api/api';
 
 class BookDictionarySingleton {
   private cache = new Map<string, BookEntry[]>();
@@ -13,17 +14,35 @@ class BookDictionarySingleton {
     const { setDictionary } = useBookDictionary();
     translations.forEach(async (translation) => {
       if (!this.cache.has(translation)) {
-        const books = await getBooks(translation);
-        this.cache.set(translation, books);
+        const books: dbBookEntryResponse[] = await getBooks(translation);
+        this.cache.set(translation, this.convertResponseToBookEntryArray(books));
         setDictionary(this.cache);
       }
     });
   }
 
+  convertResponseToBookEntryArray(dbEntry: dbBookEntryResponse[]): BookEntry[] {
+    const bookEntries: BookEntry[] = [];
+    dbEntry.forEach((entry) => {
+      const chapterInfo = BookChapterVerseCountJSON.find((b) => b.Id === entry.bookid);
+      bookEntries.push({
+        bookid: entry.bookid,
+        name: entry.name,
+        chapters: chapterInfo
+          ? chapterInfo.Chapters.map((numVerses) => ({
+              index: numVerses.Id,
+              verses: numVerses.Verses,
+            }))
+          : [],
+      });
+    });
+    return bookEntries;
+  }
+
   getBookFromCache(translation: string, bookID: number): BookEntry | undefined {
     if (this.cache.has(translation)) {
-        const books = this.cache.get(translation)!;
-        return books.find(book => book.bookid === bookID);
+      const books = this.cache.get(translation)!;
+      return books.find((book) => book.bookid === bookID);
     }
     return undefined;
   }

@@ -24,36 +24,40 @@ const RootStack = createNativeStackNavigator({
       options: () => ({
         animation: 'slide_from_left',
         headerShown: false,
-      })
+      }),
     },
     CollectionView: {
       screen: CollectionView,
-      options: ({ route }: { route: { params?: { CollectionName?: string; CollectionKey?: number } } }) => ({
+      options: ({
+        route,
+      }: {
+        route: { params?: { CollectionName?: string; CollectionKey?: number } };
+      }) => ({
         animation: 'slide_from_right',
         title: route.params?.CollectionName,
         headerShown: false,
-      })
+      }),
     },
     CollectionListView: {
       screen: CollectionListView,
       options: ({ route }: { route: { params?: { slideDirection?: string } } }) => ({
         animation: route.params?.slideDirection === 'left' ? 'slide_from_left' : 'slide_from_right',
         headerShown: false,
-      })
+      }),
     },
     CollectionDetailView: {
       screen: CollectionDetailView,
       options: ({ route }: { route: { params?: { collectionId?: number } } }) => ({
         animation: 'slide_from_right',
         headerShown: false,
-      })
+      }),
     },
     SettingsScreen: {
       screen: SettingsScreen,
       options: () => ({
         animation: 'slide_from_right',
         headerShown: false,
-      })
+      }),
     },
   },
 });
@@ -61,14 +65,14 @@ const RootStack = createNativeStackNavigator({
 const Navigation = createStaticNavigation(RootStack);
 
 export default function App() {
-    return (
+  return (
     <StrictMode>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <SafeAreaProvider>
           <SQLiteProvider {...databaseProps}>
-              <BookProvider>
-                <Navigation />
-              </BookProvider>
+            <BookProvider>
+              <Navigation />
+            </BookProvider>
           </SQLiteProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>

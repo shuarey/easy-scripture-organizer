@@ -5,7 +5,5 @@ type ScriptureEntryProps = {
 };
 
 export const Separator = ({ color }: ScriptureEntryProps) => {
-  return (
-    <View className={`h-[1px] my-7 w-4/5 mx-auto ${color || 'bg-gray-200'}`} />
-  );
+  return <View className={`mx-auto my-7 h-[1px] w-4/5 ${color || 'bg-gray-200'}`} />;
 };
