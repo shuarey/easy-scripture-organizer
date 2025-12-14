@@ -15,18 +15,12 @@ type ScriptureEntryProps = {
 
 const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: ScriptureEntryProps) => {
   const [verses, setVerses] = useState<Verse[]>([]);
-  const [verseSpan, setVerseSpan] = useState<string>('');
   const { dictionary } = useBookDictionary();
   const [fetching, setFetching] = useState(true);
   const [showDetailContent, setShowDetailContent] = useState(false);
 
   useEffect(() => {
     setFetching(true);
-    setVerseSpan(
-      verseNumbers.length > 1
-        ? `${verseNumbers[0]}-${verseNumbers[verseNumbers.length - 1]}`
-        : `${verseNumbers[0]}`
-    );
 
     Promise.all(
       translations.map(async (translation) => {
@@ -62,7 +56,7 @@ const ScriptureEntry = ({ translations, book, chapter, verseNumbers }: Scripture
         <ListItem key={idx} onPress={handleListItemOnPress}>
           <ListItem.Content>
             <ListItem.Title className="text-md flex-auto font-medium">
-              {verse.book} {chapter}:{verseSpan} ({verse.translation})
+              {verse.book} {chapter}:{verseNumbers} ({verse.translation})
             </ListItem.Title>
             {showDetailContent && <RenderHtml html={verse.text} />}
           </ListItem.Content>

@@ -4,7 +4,7 @@ export interface Verse extends CollectionVerse {
   translation: string;
   book: number | string;
   chapter: number;
-  verseNumber: number;
+  verseNumber: number[];
   text: string;
 }
 

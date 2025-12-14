@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button } from 'react-native';
 
-import { bookDict } from 'services/bookDictionaryService';
 import { getAllCollections } from 'services/dbCollectionService';
 
 import { Container } from 'components/Container';
@@ -10,11 +9,15 @@ import { LoadingScreen } from 'components/LoadingScreen';
 import { ScreenContent } from 'components/ScreenContent';
 import { useAppNavigation } from 'components/Navigation';
 
+import { bookDict } from 'services/bookDictionaryService';
+
 import { useSQLiteContext } from 'expo-sqlite';
 
 export default function HomeScreen() {
   const db = useSQLiteContext();
   const navigation = useAppNavigation();
+
+  bookDict.setBooks(["NKJV"]);
 
   const [dbCollections, setDbCollections] = useState<
     {

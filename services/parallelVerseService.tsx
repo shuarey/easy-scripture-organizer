@@ -13,6 +13,7 @@ class ParallelVerseSingleton {
   private verseDict: VerseDictionary = {};
 
   async getParallelVerses({ translations, book, chapter, verseNumbers }: getParallelVersesProps) {
+    
     this.verseData = await getParallelVerses(translations, book, chapter, verseNumbers);
 
     this.verseData!.forEach((translationGroup: Verse[]) => {

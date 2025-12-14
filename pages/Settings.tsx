@@ -1,5 +1,5 @@
 import MultiSelect from 'react-native-multiple-select';
-import { useWindowDimensions } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-native-elements';
 import { useSQLiteContext } from 'expo-sqlite';
@@ -80,6 +80,7 @@ export default function SettingsScreen() {
   return (
     <Container>
       <ScreenContent title="Settings" scrollViewEnabled={false}>
+        <Text className="text-lg font-bold mb-4">Select Languages:</Text>
         <MultiSelect
           items={JSONlanguages}
           onSelectedItemsChange={handleSelectedItemsChange}

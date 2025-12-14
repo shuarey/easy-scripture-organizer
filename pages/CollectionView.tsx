@@ -13,6 +13,7 @@ import ScriptureEntry from 'components/ScriptureEntry';
 
 import BookChapterVerseCountJSON from '../assets/BookChapterVerseCount.json';
 import { RangePicker } from 'components/RangePicker';
+import { Verse } from 'models/models';
 
 type CollectionViewProps = {
   route: {
@@ -26,15 +27,7 @@ type CollectionViewProps = {
 export default function CollectionView({ route }: CollectionViewProps) {
   const db = useSQLiteContext();
 
-  const [dbVerses, setDbVerses] = useState<
-    {
-      book: string | number;
-      chapter: number;
-      verseNumber: number;
-      versions: string[];
-      ordinal: number;
-    }[]
-  >([]);
+  const [dbVerses, setDbVerses] = useState<Verse[]>([]);
 
   const [newVerse, setNewVerse] = useState<{
     Book: number;
@@ -63,6 +56,7 @@ export default function CollectionView({ route }: CollectionViewProps) {
   const [chapterVerseCount, setChapterVerseCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [showAddVerseOverlay, setShowAddVerseOverlay] = useState(false);
+  const [refetchTrigger, setRefetchTrigger] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -77,7 +71,7 @@ export default function CollectionView({ route }: CollectionViewProps) {
         );
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [refetchTrigger]);
 
   useEffect(() => {
     const bookId = newVerse.Book;
@@ -128,7 +122,6 @@ export default function CollectionView({ route }: CollectionViewProps) {
   }, [newVerse.Chapter]);
 
   async function handleAddVerse() {
-    console.log(`Book: ${newVerse.Book}, Chapter: ${newVerse.Chapter}, Verse: ${newVerse.Verse}`);
     await insertVerse(db, newVerse.Book, newVerse.Chapter, newVerse.Verse)
       .then((verseID) => {
         // insert into collection_verse with default version
@@ -137,6 +130,8 @@ export default function CollectionView({ route }: CollectionViewProps) {
         const defaultVersion = 'NKJV';
         insertCollectionVerse(db, CollectionKey, verseID as number, defaultVersion);
       })
+      .then(() => setRefetchTrigger((prev) => prev + 1))
+      .catch((err) => console.error('Error adding verse', err))
       .finally(() => setShowAddVerseOverlay(false));
   }
 
@@ -144,14 +139,14 @@ export default function CollectionView({ route }: CollectionViewProps) {
 
   return (
     <Container>
-      <ScreenContent title={CollectionName}>
+      <ScreenContent title={CollectionName} scrollViewEnabled={true}>
         {dbVerses.map((verse, index) => (
           <ScriptureEntry
             key={index}
             translations={['NKJV']}
             book={verse.book as number}
             chapter={verse.chapter}
-            verseNumbers={[verse.verseNumber]}
+            verseNumbers={verse.verseNumber}
           />
         ))}
         <Button

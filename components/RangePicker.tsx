@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { Input } from 'react-native-elements';
 import { PickerComponent } from './Picker';
