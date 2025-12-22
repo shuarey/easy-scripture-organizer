@@ -17,7 +17,7 @@ export default function HomeScreen() {
   const db = useSQLiteContext();
   const navigation = useAppNavigation();
 
-  bookDict.setBooks(["NKJV"]);
+  bookDict.setBooks(['NKJV']);
 
   const [dbCollections, setDbCollections] = useState<
     {

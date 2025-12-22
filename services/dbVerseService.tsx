@@ -1,5 +1,6 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 import { dbVerseResponse, Verse } from 'models/models';
+import { parseVerseString } from '../utils/verseUtils';
 
 export async function insertVerse(
   db: SQLiteDatabase,
@@ -57,20 +58,7 @@ export async function getVersesByCollectionId(
           | string
           | number
           | undefined;
-        const asString = String(raw ?? '').trim();
-        const verseNumbers: number[] = [];
-
-        if (asString.includes('-')) {
-          const parts = asString.split('-').map((p) => p.trim());
-          const start = parseInt(parts[0], 10);
-          const end = parseInt(parts[1], 10);
-          if (!Number.isNaN(start) && !Number.isNaN(end) && end >= start) {
-            for (let i = start; i <= end; i++) verseNumbers.push(i);
-          }
-        } else {
-          const n = parseInt(asString, 10);
-          if (!Number.isNaN(n)) verseNumbers.push(n);
-        }
+        const verseNumbers: number[] = parseVerseString(raw as any);
 
         const pk = Number(row['ID'] ?? row['id'] ?? 0);
         const book = (row['BOOK'] ?? row['book'] ?? 0) as number | string;
@@ -85,6 +73,7 @@ export async function getVersesByCollectionId(
           book,
           chapter,
           verseNumber: verseNumbers,
+          verseNumberRaw: String(raw ?? ''),
           text: '',
           collection_pk: collectionId,
           verse_pk,

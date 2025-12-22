@@ -18,3 +18,19 @@ export async function insertCollectionVerse(
 }
 
 export async function getCollectionVerseByID() {}
+
+export async function deleteCollectionVerseByVerseId(
+  db: SQLiteDatabase,
+  collectionID: number,
+  verseID: number
+) {
+  console.log(`Deleting collection: ${collectionID} verse: ${verseID}`);
+  await db
+    .runAsync('DELETE FROM collection_verse WHERE collection_id = ? AND verse_id = ?', [
+      collectionID,
+      verseID,
+    ])
+    .catch((error) => {
+      console.log('Failed to delete collection_verse', error);
+    });
+}

@@ -80,7 +80,7 @@ export default function SettingsScreen() {
   return (
     <Container>
       <ScreenContent title="Settings" scrollViewEnabled={false}>
-        <Text className="text-lg font-bold mb-4">Select Languages:</Text>
+        <Text className="mb-4 text-lg font-bold">Select Languages:</Text>
         <MultiSelect
           items={JSONlanguages}
           onSelectedItemsChange={handleSelectedItemsChange}

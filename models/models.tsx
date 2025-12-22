@@ -5,6 +5,7 @@ export interface Verse extends CollectionVerse {
   book: number | string;
   chapter: number;
   verseNumber: number[];
+  verseNumberRaw?: string;
   text: string;
 }
 

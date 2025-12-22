@@ -6,6 +6,7 @@ import { PickerComponent } from './Picker';
 type RangePickerProps = {
   label: string;
   finalNumber: number;
+  initialState?: { start: number; end: number };
   onSelectRange?: (rangeString: string) => void;
   enabled?: boolean;
 };
@@ -13,6 +14,7 @@ type RangePickerProps = {
 export const RangePicker = ({
   label,
   finalNumber,
+  initialState,
   onSelectRange,
   enabled = true,
 }: RangePickerProps) => {
@@ -30,9 +32,10 @@ export const RangePicker = ({
   }, [finalNumber]);
 
   const limitedItems = useMemo(() => {
+    if (initialState) setStart(initialState.start);
     if (!start) return [];
     return fullItems.filter((x) => x.id >= start);
-  }, [start, fullItems]);
+  }, [start, initialState?.start, fullItems]);
 
   const handleFinalize = (key: number) => {
     const newEnd = key;
@@ -71,7 +74,7 @@ export const RangePicker = ({
               <PickerComponent
                 label="Start"
                 items={fullItems}
-                selectedValue={start ?? 0}
+                selectedValue={start ?? initialState?.start ?? 0}
                 enabled={enabled}
                 style={labelStyle}
                 onSelect={(key) => {
@@ -92,7 +95,7 @@ export const RangePicker = ({
               <PickerComponent
                 label="End"
                 items={limitedItems}
-                selectedValue={end ?? 0}
+                selectedValue={end ?? initialState?.end ?? 0}
                 style={labelStyle}
                 onSelect={(key) => {
                   if (!start) return;
